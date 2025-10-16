@@ -1,0 +1,19 @@
+version: '3'
+
+
+services:
+  pots-cowrie:
+    build: server/cowrie
+    user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
+    ports:
+      - 2222:2222
+    volumes:
+      - ./data/cowrie/logs:/home/cowrie/cowrie/var/log/cowrie
+      - ./data/cowrie/downloads:/home/cowrie/cowrie/var/lib/cowrie/downloads
+
+  sys-filebeat:
+    build: server/filebeat
+    user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
+    volumes:
+      - ./data:/var/log/pots
+      - ./logs:/var/log/filebeat

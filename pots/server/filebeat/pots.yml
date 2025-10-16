@@ -1,0 +1,27 @@
+# minipots filebeat basic config
+
+filebeat.inputs:
+- type: filestream
+  id: main-filestream-id
+  enabled: true
+  paths:
+    - /var/log/pots/**.log
+    - /var/log/pots/**.json
+  recursive_glob.enabled: true
+  
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+
+output.logstash:
+  hosts: ["10.0.0.2:5044"]
+
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
