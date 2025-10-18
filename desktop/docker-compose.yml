@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  lsys-logstash:
+    build: server/logstash
+    user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
+    ports:
+      - 5044:5044
