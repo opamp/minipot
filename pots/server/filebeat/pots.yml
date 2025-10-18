@@ -2,12 +2,10 @@
 
 filebeat.inputs:
 - type: filestream
-  id: main-filestream-id
+  id: cowrie-id
   enabled: true
   paths:
-    - /var/log/pots/**.log
-    - /var/log/pots/**.json
-  recursive_glob.enabled: true
+    - /var/log/pots/cowrie/logs/*.json
   
 filebeat.config.modules:
   path: ${path.config}/modules.d/*.yml
@@ -25,3 +23,11 @@ processors:
   - add_cloud_metadata: ~
   - add_docker_metadata: ~
   - add_kubernetes_metadata: ~
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /home/filebeat/log
+  name: filebeat
+  keepfile: 10
+  permissions: 0644
