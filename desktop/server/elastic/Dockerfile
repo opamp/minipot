@@ -17,14 +17,20 @@ EOF
 
 RUN microdnf install -y --enablerepo=elasticsearch shadow-utils elasticsearch
 
+RUN rm -fr /etc/elasticsearch
+COPY --chown=root:elasticsearch config/ /etc/elasticsearch
+RUN <<EOF
+    mkdir -p /var/run/elasticsearch
+    chown elasticsearch:elasticsearch /var/run/elasticsearch
+    chmod 660 /etc/elasticsearch/*.yml /etc/elasticsearch/*.keystore /etc/elasticsearch/users /etc/elasticsearch/users_roles
+EOF
+
 USER elasticsearch
 ENV ES_HOME=/usr/share/elasticsearch
 ENV ES_PATH_CONF=/etc/elasticsearch
 ENV PID_DIR=/var/run/elasticsearch
 ENV ES_SD_NOTIFY=true
 
-#COPY --chown=logstash:logstash config/ /home/logstash/config/
-
-# # command
-# ENTRYPOINT ["/usr/share/logstash/bin/logstash"]
-# CMD ["--path.settings", "/home/logstash/config"]
+# command
+ENTRYPOINT ["/usr/share/elasticsearch/bin/elasticsearch"]
+CMD ["-p", "/var/run/elasticsearch/elastic.pid"]

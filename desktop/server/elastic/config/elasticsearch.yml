@@ -14,7 +14,7 @@
 #
 # Use a descriptive name for your cluster:
 #
-#cluster.name: my-application
+cluster.name: minipot-app
 #
 # ------------------------------------ Node ------------------------------------
 #
@@ -53,12 +53,12 @@ path.logs: /var/log/elasticsearch
 # By default Elasticsearch is only accessible on localhost. Set a different
 # address here to expose this node on the network:
 #
-#network.host: 192.168.0.1
+network.host: 0.0.0.0
 #
 # By default Elasticsearch listens for HTTP traffic on the first free port it
 # finds starting at 9200. Set a specific HTTP port here:
 #
-#http.port: 9200
+http.port: 9200
 #
 # For more information, consult the network module documentation.
 #
@@ -114,6 +114,6 @@ http.host: 0.0.0.0
 
 # Allow other nodes to join the cluster from anywhere
 # Connections are encrypted and mutually authenticated
-#transport.host: 0.0.0.0
+transport.host: 0.0.0.0
 
 #----------------------- END SECURITY AUTO CONFIGURATION -------------------------
