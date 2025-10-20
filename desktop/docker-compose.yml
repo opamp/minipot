@@ -12,8 +12,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch-wolfi:9.1.5
     hostname: lsys-elastic
     ports:
-      - 9200:9200
-      - 9300:9300
+      - 127.0.0.1:9200:9200
+      - 127.0.0.1:9300:9300
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -22,8 +22,12 @@ services:
   lsys-kibana:
     image: docker.elastic.co/kibana/kibana:9.1.5
     hostname: lsys-kibana
+    environment:
+      - xpack.security.enabled=false
+    depends_on:
+      - lsys-elastic
     ports:
-      - 5601:5601
+      - 127.0.0.1:5601:5601
       
   # lsys-elastic:
   #   build: server/elastic
