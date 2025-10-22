@@ -24,6 +24,7 @@ services:
     hostname: lsys-kibana
     environment:
       - xpack.security.enabled=false
+      - ELASTICSEARCH_HOSTS=http://lsys-elastic:9200
     depends_on:
       - lsys-elastic
     ports:
