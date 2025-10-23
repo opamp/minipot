@@ -1,0 +1,7 @@
+## wowhoneypot input config
+
+- type: filestream
+  id: wowhoneypot-id
+  enabled: true
+  paths:
+    - /var/log/pots/wowhoneypot/logs/access_log

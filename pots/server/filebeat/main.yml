@@ -1,20 +1,22 @@
 ## minipots filebeat basic config
 
-# filebeat.config.inputs:
-#   enabled: true
-#   path: ${path.config}/inputs.d/*.yml
+filebeat.config.inputs:
+  enabled: true
+  path: ${path.config}/inputs.d/*.yml
+  reload.enabled: true
+  reload.period: 60s
 
-filebeat.inputs:
-- type: filestream
-  id: wowhoneypot-id
-  enabled: true
-  paths:
-    - /var/log/pots/wowhoneypot/logs/access_log
-- type: filestream
-  id: cowrie-id
-  enabled: true
-  paths:
-    - /var/log/pots/cowrie/logs/*.json
+# filebeat.inputs:
+# - type: filestream
+#   id: wowhoneypot-id
+#   enabled: true
+#   paths:
+#     - /var/log/pots/wowhoneypot/logs/access_log
+# - type: filestream
+#   id: cowrie-id
+#   enabled: true
+#   paths:
+#     - /var/log/pots/cowrie/logs/*.json
   
 filebeat.config.modules:
   path: ${path.config}/modules.d/*.yml

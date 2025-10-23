@@ -1,0 +1,7 @@
+## cowrie input config
+
+- type: filestream
+  id: cowrie-id
+  enabled: true
+  paths:
+    - /var/log/pots/cowrie/logs/*.json
