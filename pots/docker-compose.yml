@@ -24,4 +24,4 @@ services:
     user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
     volumes:
       - ./data:/var/log/pots
-      - ./logs:/var/log/filebeat
+      - ./logs/filebeat:/home/filebeat/log

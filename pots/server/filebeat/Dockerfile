@@ -20,13 +20,16 @@ RUN <<EOF
     echo "filebeat:x:1000:1000:filebeat user:/home/filebeat:/bin/bash" >> /etc/passwd
     echo "filebeat:x:1000:" >> /etc/group
     mkdir -p /home/filebeat/{config,data,log}
+    mkdir /home/filebeat/config/inputs.d
+    cp -r /etc/filebeat/modules.d /home/filebeat/config/
     chown -R filebeat:filebeat /home/filebeat
 EOF
 
 # copy config
-COPY --chown=filebeat:filebeat pots.yml /home/filebeat/config/
+COPY --chown=filebeat:filebeat main.yml /home/filebeat/config/
+COPY --chown=filebeat:filebeat inputs.d /home/filebeat/config/inputs.d/
 USER filebeat
 
 # command
 ENTRYPOINT ["/usr/share/filebeat/bin/filebeat"]
-CMD ["--environment", "container", "-c", "/home/filebeat/config/pots.yml", "--path.home", "/usr/share/filebeat", "--path.config", "/home/filebeat/config", "--path.data", "/home/filebeat/data", "--path.logs", "/home/filebeat/log"]
+CMD ["--environment", "container", "-c", "/home/filebeat/config/main.yml", "--path.home", "/usr/share/filebeat", "--path.config", "/home/filebeat/config", "--path.data", "/home/filebeat/data", "--path.logs", "/home/filebeat/log"]
