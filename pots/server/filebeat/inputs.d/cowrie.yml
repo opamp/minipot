@@ -5,3 +5,6 @@
   enabled: true
   paths:
     - /var/log/pots/cowrie/logs/*.json
+  fields:
+    honeypot_type: cowrie
+  fields_under_root: true
