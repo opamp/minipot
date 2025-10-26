@@ -23,5 +23,6 @@ services:
     build: server/filebeat
     user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
     volumes:
-      - ./data:/var/log/pots
+      - ./data:/var/log/pots:ro
       - ./logs/filebeat:/home/filebeat/log
+      - ./logs/filebeat-data:/home/filebeat/data
