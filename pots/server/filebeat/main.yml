@@ -1,5 +1,7 @@
 ## minipots filebeat basic config
 
+name: "pots-1"
+
 filebeat.config.inputs:
   enabled: true
   path: ${path.config}/inputs.d/*.yml
