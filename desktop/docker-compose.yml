@@ -18,6 +18,8 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
     mem_limit: 1g
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
 
   lsys-kibana:
     image: docker.elastic.co/kibana/kibana:9.1.5
@@ -30,8 +32,12 @@ services:
     ports:
       - 127.0.0.1:5601:5601
       
-  # lsys-elastic:
-  #   build: server/elastic
-  #   hostname: lsys-elastic
-  #   ports:
-  #     - 9200:9200
+  lsys-kibana-initialize:
+    image: curlimages/curl:8.16.0
+    container_name: lsys-kibana-initialize
+    depends_on:
+      - lsys-kibana
+    volumes:
+      - ./server/kibana-init/init.sh:/init.sh:ro
+      - ./server/kibana-init/init.ndjson:/data/init.ndjson:ro
+    command: /bin/sh /init.sh
