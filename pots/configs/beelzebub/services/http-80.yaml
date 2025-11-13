@@ -1,0 +1,27 @@
+apiVersion: "v1"
+protocol: "http"
+address: ":80"
+description: "http honeypot"
+commands:
+  - regex: "^(/index.php|/index.html|/)$"
+    handler:
+      <html>
+        <header>
+          <title>Hello</title>
+        </header>
+        <body>
+          <h1>It works</h1>
+        </body>
+      </html>
+    headers:
+      - "Content-Type: text/html"
+      - "Server: Apache/2.4.53 (Debian)"
+      - "X-Powered-By: PHP/7.4.29"
+    statusCode: 200
+  - regex: "^.*$"
+    plugin: "LLMHoneypot"
+    statusCode: 200
+plugin:
+  llmProvider: "openai"
+  llmModel: "gpt-4o"
+  openAISecretKey: ""

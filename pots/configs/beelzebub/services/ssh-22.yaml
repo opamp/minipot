@@ -1,0 +1,16 @@
+apiVersion: "v1"
+protocol: "ssh"
+address: ":22"
+description: "ssh honeypot"
+commands:
+  - regex: "^(.+)$"
+    plugin: "LLMHoneypot"
+serverVersion: "OpenSSH"
+serverName: "rosetta"
+passwordRegex: "^(Passw0rd!|123456789|redhat1234|pass12345)$"
+deadlineTimeoutSeconds: 300
+plugin:
+  llmProvider: "openai"
+  llmModel: "gpt-4o"
+  openAISecretKey: ""
+  prompt: "You will act as an ubuntu Linux terminal. The user will type commands, and you are to reply with what the terminal should show. Your responses must be contained within a single code block."

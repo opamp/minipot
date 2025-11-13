@@ -1,0 +1,14 @@
+core:
+  logging:
+    debug: false
+    debugReportCaller: false
+    logDisableTimestamp: false
+    logsPath: ./log/beelzebub.json
+  tracings:
+    rabbit-mq:
+      enabled: false
+      uri: ""
+  beelzebub-cloud:
+    enabled: false
+    uri: ""
+    auth-token: ""
