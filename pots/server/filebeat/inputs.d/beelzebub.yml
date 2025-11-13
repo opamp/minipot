@@ -1,0 +1,10 @@
+## beelzebub input config
+
+- type: filestream
+  id: beelzebub-id
+  enabled: true
+  paths:
+    - /var/log/pots/beelzebub/*.json
+  fields:
+    honeypot_type: beelzebub
+  fields_under_root: true
