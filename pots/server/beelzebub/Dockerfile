@@ -14,7 +14,8 @@ FROM alpine:3.22.1 AS runtime
 
 RUN adduser --disabled-password beelzebub
 COPY --from=builder --chown=beelzebub:beelzebub /beelzebub/main /home/beelzebub/
+RUN mkdir -p /home/beelzebub/log
 
 USER beelzebub
 WORKDIR /home/beelzebub
-ENTRYPOINT ["/home/bleelzebub/main"]
+ENTRYPOINT ["/home/beelzebub/main"]
