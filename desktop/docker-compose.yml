@@ -5,6 +5,9 @@ services:
     build: server/logstash
     hostname: lsys-logstash
     user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
+    environment:
+      - LOGSTASH_STDOUT=true
+      - LOGSTASH_DISABLE_DIET=false
     ports:
       - 5044:5044
 
