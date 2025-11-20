@@ -28,7 +28,7 @@ EOF
 # copy config
 COPY --chown=filebeat:filebeat main.yml /home/filebeat/config/
 COPY --chown=filebeat:filebeat inputs.d /home/filebeat/config/inputs.d/
-RUN chmod 544 /home/filebeat/config/main.yml
+RUN find /home/filebeat/config -type f -exec chmod 544 {} +
 USER filebeat
 
 # command
