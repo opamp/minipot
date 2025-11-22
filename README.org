@@ -32,9 +32,9 @@ t-potでは１つのホスト上に各種ハニーポットとログ可視化基
 それぞれで必要なスペック目安は下記です。
 （ただし、デフォルト以外のハニーポットをユーザーにて追加した場合は追加のスペックが必要となる可能性があります）
 
-| マシン          | cpu | メモリ | OS    |
-| Honeypot-host   |   2 | 2GB    | Linux |
-| Monitoring-host |   2 | 4GB    | Linux |
+| マシン          | cpu | メモリ | OS         |
+| Honeypot-host   |   2 | 2GB    | Linux(x64) |
+| Monitoring-host |   4 | 8GB    | Linux(x64) |
 
 ハニーポットもELK Stackもdocker上に構築しているため、Dockerが動作するLinux環境(x86_64)を利用することを推奨します。
 
