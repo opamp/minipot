@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  pots-beelzebub:
+    build: server/beelzebub
+    user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
+    ports:
+      - 80:80
+      - 2222:22
+    volumes:
+      - "./configs/beelzebub:/home/beelzebub/configurations"
+      - "./data/beelzebub:/home/beelzebub/log"
+
+  sys-filebeat:
+    build: server/filebeat
+    user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
+    volumes:
+      - ./data:/var/log/pots:ro
+      - ./logs/filebeat:/home/filebeat/log
+      - ./logs/filebeat-data:/home/filebeat/data

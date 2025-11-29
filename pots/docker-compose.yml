@@ -1,15 +1,23 @@
 version: '3'
 
+
 services:
-  pots-beelzebub:
-    build: server/beelzebub
+  pots-cowrie:
+    build: server/cowrie
     user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
     ports:
-      - 80:80
-      - 2222:22
+      - 2222:2222
     volumes:
-      - "./configs/beelzebub:/home/beelzebub/configurations"
-      - "./data/beelzebub:/home/beelzebub/log"
+      - ./data/cowrie/logs:/home/cowrie/cowrie/var/log/cowrie
+      - ./data/cowrie/downloads:/home/cowrie/cowrie/var/lib/cowrie/downloads
+
+  pots-wowhoneypot:
+    build: server/wowhoneypot
+    user: "${CONTAINER_USER}:${CONTAINER_GROUP}"
+    ports:
+      - 80:8080
+    volumes:
+      - ./data/wowhoneypot/logs:/home/takashi/wowhoneypot/log
 
   sys-filebeat:
     build: server/filebeat
