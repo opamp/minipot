@@ -4,25 +4,21 @@
 
 [[https://github.com/telekom-security/tpotce][t-pot]]のアイディアをベースに作成したシンプルなハニーポット基盤を作成するプロジェクトです。
 t-potでは１つのホスト上に各種ハニーポットとログ可視化基盤(ELK Stack)を構築するためある程度のマシン性能が必要ですが、
-本プロジェクトではハニーポットとログ集約と可視化のホストを分けて、費用がかかりがちな外部公開ホストで必要なマシン性能を
-なるべく抑えようしています。
+本プロジェクトではハニーポットとログ集約と可視化のホストを分けて、費用がかかりがちな外部公開ホストで必要なマシン性能をなるべく抑えようしています。
 
 [[file:docs/images/overview.jpg]]
 
 * ハニーポット
 
-現在のところ、本プロジェクトには２つの簡単なハニーポットが組み込まれています。
+現在のところ、本プロジェクトには3つのハニーポットが含まれます。
 
-| ハニーポット名 | プロトコル | ポート | 概要                                                |
-| WOWHoneypot    | http       |     80 | HTTPアクセスに対してすべて200を返すハニーポットです |
-| cowrie         | ssh        |   2222 | sshの低対話型ハニーポットです                       |
+| ハニーポット名 | プロトコル   | ポート | 概要                                                |
+| WOWHoneypot    | http         |     80 | HTTPアクセスに対してすべて200を返すハニーポットです |
+| cowrie         | ssh          |   2222 | sshの低対話型ハニーポットです                       |
+| beelzebub      | http/ssh/etc |      - | デフォルトでは無効                                  |
 
-* セットアップ（検証中）
 
-/本手順は構成・検証中となりますので、現在正しく動作しない可能性があります。/
-
-現在、t-potのような自動構築機能は実装していませんので、手動でのセットアップが必要となります。
-
+* セットアップ
 
 ** マシンの推奨構成・スペック
 
@@ -44,7 +40,8 @@ t-potでは１つのホスト上に各種ハニーポットとログ可視化基
 
 ** ネットワーク設定
 
-各ホストのNICは下記の想定です。
+各ホストのNICは下記のように設定する想定です。
+それぞれのホストにインターネット接続するためのNICとは別にwireguard用のNICを作成して、wireguradでVPNを張ります。
 
 - Honeypot-host
   - インターネットアクセス可能なグローバルIP
@@ -57,15 +54,13 @@ Honeypot-hostは外部からハニーポットへアクセスさせるため、�
 Monitoring-hostはログ集約と可視化のためのホストであるため自宅内のPCやVM等として、一般的なNAT環境下のプライベートIPで動作しているものとします。
 これらのホストが直接通信できるように[[https://www.wireguard.com/][wireguard]]を用いてVPNを張ります。
 
-wireguardの設定手順は[[https://wiki.archlinux.jp/index.php/WireGuard][ArchWiki]]等を参照してください。
-
 今回は、下記の設定を行ったものとします。Honeypot-hostからMonitoring-host(10.0.0.2)にpingが通ること、
 逆にMonitoring-hostからHoneypot-host(10.0.0.1)にpingが通ることを確認してください。
 
 - Honeypot-host
-  - VPN IP: 10.0.0.1/24
-- Monitoring-host
   - VPN IP: 10.0.0.2/24
+- Monitoring-host
+  - VPN IP: 10.0.0.1/24
 
 ** プロジェクトのclone
 
@@ -97,7 +92,7 @@ $ cd server/cowrie
 より多くの攻撃を観測する場合は22番になるようにホストOSの設定含めて調整してください。
 
 また、Monitoring-hostへのログ転送はfilebeatで実施します。Monitoring-hostではlogstashでログを受信します。
-Monitoring-hostのIPが10.0.0.2ではない場合やMonitoring-host側でlogstashのポート番号を変更した場合は、
+Monitoring-hostのIPが10.0.0.1ではない場合やMonitoring-host側でlogstashのポート番号を変更した場合は、
 filebeatのmain.ymlファイルの宛先IPを修正してください。
 
 #+begin_src 
@@ -106,9 +101,8 @@ $ edit server/filebeat/main.yml
 
 #+begin_src 
 output.logstash:
-  hosts: ["10.0.0.2:5044"] # Monitoring-hostのlogstash宛となるよう修正する
+  hosts: ["10.0.0.1:5044"] # Monitoring-hostのlogstash宛となるよう修正する
 #+end_src
-
 
 ** Monitoring-host側での設定確認
 
@@ -121,6 +115,7 @@ $ cd minipot/desktop
 
 コンテナのDockerfileは更にserverディレクトリの対応するディレクトリ内部に入っています。
 Monitoring-host側はlogstash以外は公式イメージを使用しているため、elastic/kibanaの設定変更はdocker-compose.ymlにて実施してください。
+また、今回elasticsearchやkibanaはローカルの環境からのみアクセスすることを想定しているためSSL等の設定を無効化していますので注意してください。
 
 ** 起動
 
@@ -138,6 +133,17 @@ Monitoring-hostでは下記です。
 #+begin_src 
 $ cd minipot/desktop
 $ docker compose up -d
+#+end_src
+
+kibanaは初回起動時に自動で最低限の設定を実施します。コンテナが起動した後も正常にアクセスできるまでしばらく時間がかかります。
+
+* アクセス
+
+Monitoring-host上でブラウザを用いて下記にアクセスすることでkibanaを参照できます。
+正常に動作していれば、Honeypot-hostで取得したログがkibanaから閲覧可能です。
+
+#+begin_src 
+http://localhost:5601/
 #+end_src
 
 * LICENSE
